@@ -1,0 +1,5 @@
+
+
+### Run docker interactively
+
+docker run -v C:\\Users\\pc\\Documents\\DiplomováPráca\\DP:/var/www/html -p 8080:80 app

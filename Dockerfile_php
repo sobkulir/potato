@@ -1,0 +1,20 @@
+FROM centos:7
+
+# Update the system and install necessary dependencies
+RUN yum -y update && \
+    yum install -y epel-release && \
+    yum install -y php php-mysql php-gd php-xml php-mbstring && \
+    yum clean all && \
+    rm -rf /var/cache/yum
+
+# Set the working directory
+WORKDIR /var/www/html
+
+# Copy the PHP project files into the container
+COPY . .
+
+# Expose port 80 for HTTP traffic
+EXPOSE 80
+
+# Start the PHP web server
+CMD ["php", "-S", "0.0.0.0:80", "-t", "/var/www/html"]

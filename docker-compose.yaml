@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile_php
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+      - python
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: 'secmon'
+      POSTGRES_PASSWORD: '326598'
+      POSTGRES_DB: 'module'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile_python
+    depends_on:
+      - db
+
+
+volumes:
+  db-data:
+
+
