@@ -5,6 +5,8 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile_php
+    env_file:
+      - .env
     ports:
       - "80:80"
     depends_on:
@@ -13,24 +15,27 @@ services:
 
   db:
     image: postgres
-    environment:
-      POSTGRES_USER: 'secmon'
-      POSTGRES_PASSWORD: '326598'
-      POSTGRES_DB: 'module'
+    restart: always
+    env_file:
+      - .env
     volumes:
       - db-data:/var/lib/postgresql/data
-    ports:
-      - 5434:5432
 
   python:
     build:
       context: .
       dockerfile: Dockerfile_python
+    # (Roman) Tu bola chyba, tie environment premenne si tam neposuval.
+    env_file:
+      - .env
+    # (Roman) Pre DEV vacsinou takto bind-mountujem vsetko aby som nemusel vzdy
+    # rebuildid ten image. Pre PROD mavam separatny docker-compose-prod.yaml,
+    # bez tohto bind-mountu. 
+    volumes:
+      - .:/app
     depends_on:
       - db
 
 
 volumes:
   db-data:
-
-
