@@ -5,11 +5,6 @@ import pandas as pd
 import psycopg2
 import logging
 from sqlalchemy import create_engine
-from dotenv import load_dotenv
-
-# (Roman) Ten .env file sa typicky posuva cez env_file v `docker-copmose.yaml`,
-#         takze toto nepotrebujes.
-load_dotenv()
 
 # Define database credentials as environment variables
 POSTGRES_DB = os.getenv('POSTGRES_DB')
