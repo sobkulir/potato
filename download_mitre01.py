@@ -7,14 +7,15 @@ import logging
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 
+# (Roman) Ten .env file sa typicky posuva cez env_file v `docker-copmose.yaml`,
+#         takze toto nepotrebujes.
 load_dotenv()
 
 # Define database credentials as environment variables
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 DB_HOST = os.getenv('DB_HOST')
-DB_PORT = os.getenv('DB_PORT')
 
 def download_matrix():
     URL = "https://docs.google.com/spreadsheets/d/1x5raJiu4W0gMoLufHN62OXhyJn2IBeIu/edit?usp=share_link&ouid=110487550874067370729&rtpof=true&sd=true"
@@ -27,11 +28,10 @@ def create_database():
     # Create database connection
     try:
         connection = psycopg2.connect(
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=DB_PORT
+            dbname=POSTGRES_DB,
+            user=POSTGRES_USER,
+            password=POSTGRES_PASSWORD,
+            host=DB_HOST
         )
     except psycopg2.Error as e:
         raise Exception(f"Could not connect to database: {e}")
@@ -52,8 +52,8 @@ def create_database():
     # Create new table and insert data
     df = pd.read_excel(r'./matrix.xlsx')
     df = df[['ID', 'name', 'description', 'url', 'tactics', 'platforms']]
-    logging.warning('postgresql://' + DB_USER + ':' + DB_PASSWORD + '@' + DB_HOST + ':' + DB_PORT + '/' + DB_NAME)
-    engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
+    logging.warning('postgresql://' + POSTGRES_USER + ':' + POSTGRES_PASSWORD + '@' + DB_HOST + '/' + POSTGRES_DB)
+    engine = create_engine(f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_HOST}/{POSTGRES_DB}')
     df.to_sql('mitre', engine, if_exists='replace')
 
     cursor.close()
