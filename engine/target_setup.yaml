@@ -1,0 +1,53 @@
+---
+- name: Host setup playbook
+  hosts: target
+  become: true
+  vars:
+    test: "All -ShowDetailsBrief"
+  tasks:
+    # install Extra Packages for Enterprise Linux
+    - name: Install EPEL package
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - sshpass
+        state: present
+
+  # edit sshd_config for powershell remoting
+    - name: Download custom sshd_config for powershell remoting
+      ansible.builtin.get_url:
+        url: https://pastebin.com/raw/LFFTWvCz
+        dest: /etc/ssh/sshd_config
+
+  # install powershell
+    - name: Download powershell repo
+      ansible.builtin.get_url:
+        url: https://packages.microsoft.com/config/rhel/7/prod.repo
+        dest: /etc/yum.repos.d/
+
+    - name: Install Powershell
+      ansible.builtin.yum:
+        name: powershell
+        state: present 
+
+  # install invoke-atomic         
+    - name: Install InvokeAtomic
+      shell: IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing); Install-AtomicRedTeam -getAtomics -Force 
+      args:
+        executable: /usr/bin/pwsh
+      register: result
+
+    - name: Debug
+      debug:
+        var: result
+  # test invoke-atomic instalation
+    - name: Execute test
+      shell: Import-Module "/root/AtomicRedTeam/invoke-atomicredteam/Invoke-AtomicRedTeam.psd1" -Force; Invoke-AtomicTest {{ test }}
+      args:
+        executable: /usr/bin/pwsh
+      register: result
+
+    - name: Debug
+      debug:
+        var: result
+

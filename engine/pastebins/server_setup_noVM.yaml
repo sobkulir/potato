@@ -1,0 +1,29 @@
+---
+- name: Server setup playbook
+  hosts: localhost
+  connection: local
+  tasks:
+    # install Extra Packages for Enterprise Linux
+    - name: Install EPEL package
+      ansible.builtin.yum:
+        name:
+          - epel-release
+          - sshpass
+        state: present
+
+  # install powershell
+    - name: Download powershell repo
+      ansible.builtin.get_url:
+        url: https://packages.microsoft.com/config/rhel/7/prod.repo
+        dest: /etc/yum.repos.d/
+
+    - name: Install Powershell
+      ansible.builtin.yum:
+        name: powershell
+        state: present 
+
+  # edit sshd_config for powershell remoting
+    - name: Download custom sshd_config for powershell remoting
+      ansible.builtin.get_url:
+        url: https://pastebin.com/raw/LFFTWvCz
+        dest: /etc/ssh/sshd_config

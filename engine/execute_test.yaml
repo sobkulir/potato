@@ -1,0 +1,17 @@
+---
+- name: Host setup playbook
+  hosts: target
+  become: true
+  vars:
+    test: "All -ShowDetailsBrief"
+  tasks:
+    - name: Execute test
+      shell: Import-Module "/root/AtomicRedTeam/invoke-atomicredteam/Invoke-AtomicRedTeam.psd1" -Force; Invoke-AtomicTest {{ test }}
+      args:
+        executable: /usr/bin/pwsh
+      register: result
+
+    - name: Debug
+      debug:
+        var: result
+

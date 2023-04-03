@@ -4,6 +4,7 @@ FROM centos:7
 RUN yum -y update && \
     yum install -y epel-release && \
     yum install -y php php-mysql php-gd php-xml php-mbstring && \
+    yum -y install net-tools openssh-server openssh-clients && \
     yum clean all && \
     rm -rf /var/cache/yum
 

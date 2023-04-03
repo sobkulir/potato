@@ -1,5 +1,12 @@
 
-
 ### Run docker interactively
-
 docker run -v <url> -p 8080:80 app
+
+#################
+centos php-server cmd library installation
+yum -y install ifconfig openssh-server openssh-clients
+
+#################
+run ansible test - list OS information
+ansible-playbook execute_test.yaml --extra-vars '{"test":"T1082-3"}'
+

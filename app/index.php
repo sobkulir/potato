@@ -5,7 +5,7 @@
 </head>
 <body>
     <?php
-    echo "Hello, fokin world!";
+    echo "Jamaan";
     ?>
 </body>
 </html>

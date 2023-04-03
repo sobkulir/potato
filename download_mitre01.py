@@ -53,12 +53,12 @@ def create_database():
 
     cursor.close()
     connection.close()
-    os.remove('matrix.xlsx')
+    #os.remove('matrix.xlsx')
 
 if __name__ == '__main__':
     try:
         print('Downloading MITRE data.')
-        download_matrix()
+        #download_matrix()
         print('Pushing to DB.')
         create_database()
         print('Done.')
