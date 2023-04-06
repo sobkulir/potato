@@ -15,6 +15,18 @@ services:
       - db
       - python
 
+  frontend:
+    build:
+      context: .
+      dockerfile: client/Dockerfile_vue
+    volumes: 
+      - .:/client
+    ports:
+      - "8085:8080"
+    depends_on:
+      - web
+      
+
   db:
     image: postgres
     restart: always
@@ -27,12 +39,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_python
-    # (Roman) Tu bola chyba, tie environment premenne si tam neposuval.
     env_file:
       - .env
-    # (Roman) Pre DEV vacsinou takto bind-mountujem vsetko aby som nemusel vzdy
-    # rebuildid ten image. Pre PROD mavam separatny docker-compose-prod.yaml,
-    # bez tohto bind-mountu. 
     volumes:
       - .:/app
     depends_on:
