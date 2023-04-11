@@ -1,5 +1,5 @@
 <template>
-  <LandingPage class="h-screen"/>
+  <LandingPage class="h-screen" style="min-width: 1240px;"/>
 </template>
 
 <script>

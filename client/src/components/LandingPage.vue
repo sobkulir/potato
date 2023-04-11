@@ -1,5 +1,6 @@
 <template lang="">
   <div class="bg-gray-200 h-100 p-5">
+    <h1>POT - & - TOE</h1>
     <ContentWrapper />
   </div>
 </template>
@@ -10,6 +11,3 @@ export default {
   components: { ContentWrapper },
 }
 </script>
-<style lang="">
-  
-</style>
