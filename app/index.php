@@ -18,7 +18,7 @@
           console.log(response);
         }
       };
-      xhttp.open("GET", "api.php?action=startpage", true);
+      xhttp.open("GET", "app/api.php?action=startpage", true);
       xhttp.send();
     }
 
@@ -31,7 +31,7 @@
         }
       };
       var test = document.getElementById("test").value;
-      xhttp.open("GET", "api.php?action=specific&id=" + encodeURIComponent(test), true);
+      xhttp.open("GET", "app/api.php?action=specific&id=" + encodeURIComponent(test), true);
       xhttp.send();
     }
   </script>
