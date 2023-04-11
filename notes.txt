@@ -3,9 +3,14 @@ Backend         port: 8090
 Secmon server   port: 8080
 
 
+# run this to fix ansible on server
+add-apt-repository -r ppa:ansible/ansible
+
 
 ### Run docker interactively
 docker run -v <url> -p 8080:80 app
+docker run -v C:\Users\Test\Documents\Diplomovka\:/var/www/html -p 8080:80 app
+
 
 #################
 centos php-server cmd library installation

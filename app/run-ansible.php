@@ -1,50 +1,63 @@
 <?php
 
-switch ($_GET["action"]) {
-    case "installAnsible":
-        installAnsibleServer();
-        break;
-    case "setupTarget":
-        targetSetup();
-        break;
-    case "setTarget":
-        $ip = $_GET["ip"];
-        $user = $_GET["user"];
-        $pass = $_GET["pass"];
-        setTarget($ip, $user, $pass);
-        break;
-    case "executeTest":
-        $testid = $_GET["id"];
-        executeTest($testid);
-        break;
+// Define constants for configuration parameters
+define('ANSIBLE_PLAYBOOK_PATH', '/var/www/html/engine/');
+define('ANSIBLE_HOSTS_PATH', '/etc/ansible/hosts');
+
+// Install Ansible Server
+function installAnsibleServer() {
+  $command = "bash /var/www/html/engine/install_ansible_server.sh";
+  execInBackground($command);
 }
 
-    function installAnsibleServer(){
-        // Execute install_ansible.sh which launches server_setup ansible playbook
-        $command = "/var/www/html/engine/install_ansible_server.sh > output.txt 2>&1 & echo $!";
-        $pid = shell_exec($command);
-        echo $pid;
-    }
+// Set target host for Ansible
+function setTargetHost($ip, $user, $pass) {
+  $hostsContent = "[target]\n".$ip." ansible_connection=ssh ansible_ssh_user=".$user." ansible_ssh_pass=".$pass."\n";
+  file_put_contents(ANSIBLE_HOSTS_PATH, $hostsContent);
+}
 
-    function setTarget($ip, $user, $pass){ //parameters:  ansible_connection=ssh   ansible_ssh_user=centos    ansible_ssh_pass=centos
-        // rewrite ansible host file
-        $command = "echo '[target] \n$ip ansible_connection=ssh ansible_ssh_user=$user ansible_ssh_pass=$pass' > '/etc/ansible/hosts'";
-        $pid = shell_exec($command);
-        echo $pid;
-    }
+// Setup target host prerequisites
+function setupTargetHost() {
+  $command = "ansible-playbook ".ANSIBLE_PLAYBOOK_PATH."target_setup.yaml";
+  execInBackground($command);
+}
 
-    function targetSetup(){ // prereq: set_target
-        // download 
-        $command = "ansible-playbook /var/www/html/engine/target_setup.yaml > output.txt 2>&1 & echo $!";
-        $pid = shell_exec($command);
-        echo $pid;
-    }
+// Execute Ansible test
+function executeAnsibleTest($testId) {
+  $command = "ansible-playbook ".ANSIBLE_PLAYBOOK_PATH."execute_test.yaml --extra-vars '{\"test\":\"".$testId."\"}'";
+  execInBackground($command);
+}
 
-    function executeTest($test){ //parameter: testID
-        $command = "nohup ansible-playbook /var/www/html/engine/execute_test.yaml --extra-vars '{\"test\":\"$test\"}' > output.txt 2>&1 & echo $!";
-        $pid = shell_exec($command);
-        echo $pid;
-    }
+// Execute command in the background and return process ID
+function execInBackground($command) {
+  $pid = shell_exec($command." > output.txt 2>&1 & echo $!");
+  return $pid;
+}
 
-    
+// Handle incoming requests
+if (isset($_GET["action"])) {
+  switch ($_GET["action"]) {
+    case "installAnsible":
+      installAnsibleServer();
+      break;
+    case "setTarget":
+      setTargetHost($_GET["ip"], $_GET["user"], $_GET["pass"]);
+      break;
+    case "setupTarget":
+      setupTargetHost();
+      break;
+    case "executeTest":
+      executeAnsibleTest($_GET["id"]);
+      break;
+    default:
+      // Invalid action
+      http_response_code(400);
+      exit;
+  }
+} else {
+  // No action specified
+  http_response_code(400);
+  exit;
+}
+
 ?>

@@ -49,6 +49,7 @@ def create_database():
     df = df[['ID', 'name', 'description', 'url', 'tactics', 'platforms']]
     logging.warning('postgresql://' + POSTGRES_USER + ':' + POSTGRES_PASSWORD + '@' + DB_HOST + '/' + POSTGRES_DB)
     engine = create_engine(f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_HOST}/{POSTGRES_DB}')
+    df.columns = df.columns.str.lower()
     df.to_sql('mitre', engine, if_exists='replace')
 
     cursor.close()

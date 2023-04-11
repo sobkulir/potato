@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello, worlding!</title>
+    <title>Hello, world!</title>
 </head>
 <body>
-<?php
-        include './queries.php';
-        function printMitreData() {
-            $data = getMitreData();
-            echo $data;
+  <p><button onclick="getStartpageData()">Print techniques</button></p>
+  <p>___</p>
+  <p><input type="text" id="test" name="test" placeholder="test id" size="15"></p>
+  <p><button onclick="getSpecificData()">Print Tech detail</button></p>
 
-            // If the data is a string, it means there was an error.
-            // Output the error message.
-            if (is_string($data)) {
-                echo $data;
-                return;
-            }
-
-            // Otherwise, output the data as a table.
-            echo "<table>";
-            echo "<thead><tr><th>ID</th><th>Name</th><th>Description</th></tr></thead>";
-            echo "<tbody>";
-            foreach ($data as $row) {
-                echo "<tr>";
-                echo "<td>" . $row['id'] . "</td>";
-                echo "<td>" . $row['name'] . "</td>";
-                echo "<td>" . $row['description'] . "</td>";
-                echo "</tr>";
-            }
-            echo "</tbody>";
-            echo "</table>";
+  <script>
+    function getStartpageData(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText);
+          console.log(response);
         }
+      };
+      xhttp.open("GET", "api.php?action=startpage", true);
+      xhttp.send();
+    }
 
-        printMitreData();
-    ?>
+    function getSpecificData(){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText);
+          console.log(response);
+        }
+      };
+      var test = document.getElementById("test").value;
+      xhttp.open("GET", "api.php?action=specific&id=" + encodeURIComponent(test), true);
+      xhttp.send();
+    }
+  </script>
 </body>
 </html>

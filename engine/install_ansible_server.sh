@@ -4,10 +4,11 @@ ansible --version
 
 # Install ansible if not installed  (exit status != 0)
 if [ $? -ne 0 ]; then
-     yum -y update
-     yum -y install epel-repo
-     yum -y install ansible
-     yum -y install sshpass
+     apt-get update
+     apt-get install -y software-properties-common
+     apt-add-repository --yes --update ppa:ansible/ansible
+     apt-get install -y ansible
+     apt-get install -y sshpass
     ansible --version
     if [ $? -ne 0 ]; then
        echo "Unable to install Ansible"
@@ -15,18 +16,13 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
+# Remove repository -> to enable apt-get update 
+apt-add-repository --remove -y ppa:ansible/ansible
+
 # If needed execute server setup
 DIR=/var/www/html/secmon/AtomicTesting
 mkdir -p $DIR
-if [ $(ls -A $DIR | wc -l) == 0 ]; then
-     sed -i 's/#host_key_checking/host_key_checking/' /etc/ansible/ansible.cfg
+if [ $(ls -A $DIR | wc -l) == 0 ]; then     
+     # sed -i 's/#host_key_checking/host_key_checking/' /etc/ansible/ansible.cfg
      ansible-playbook /var/www/html/engine/pastebins/server_setup_noVM.yaml
-fi 
-
-
-
-    
-#fi
-
-
-
+fi
