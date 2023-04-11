@@ -1,12 +1,13 @@
-FROM centos:7
+FROM debian:10
 
 # Update the system and install necessary dependencies
-RUN yum -y update && \
-    yum install -y epel-release && \
-    yum install -y php php-mysql php-gd php-xml php-mbstring && \
-    yum -y install net-tools openssh-server openssh-clients && \
-    yum clean all && \
-    rm -rf /var/cache/yum
+RUN apt-get update && \
+    apt-get install -y php php-mysql php-gd php-xml php-mbstring && \
+    apt-get install -y net-tools openssh-server openssh-client && \
+    apt-get clean && \
+    apt-get install -y php-pgsql &&\
+    
+    rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
 WORKDIR /var/www/html
