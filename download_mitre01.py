@@ -20,6 +20,9 @@ def download_matrix():
     open("matrix.xlsx", "wb").write(response.content)
 
 def create_database():
+    # (Roman) Treba pockat kym nabehne DB.
+    import time
+    time.sleep(10)
     # Create database connection
     try:
         connection = psycopg2.connect(

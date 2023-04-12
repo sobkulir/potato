@@ -28,7 +28,11 @@ services:
       
 
   db:
-    image: postgres
+    # (Roman) Vzdy je dobre pinnut verziu, lebo default je :latest a to je total zlo. Mozno
+    # mate ine verzie postgresu. Ak si chces byt na stopic isty, tak to mozes pinnut aj s hashom
+    # odtialto https://hub.docker.com/_/postgres/tags?page=1&name=15
+    # napr. postgres@sha256:6b91d38a9c596fa4e6a1276f6f81810882d9f292a09f9cf2647c6a554c8b6d00
+    image: postgres:15.2
     restart: always
     env_file:
       - .env
